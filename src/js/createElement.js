@@ -6,4 +6,11 @@ function createImage(url, container) {
 	container.appendChild(image);
 }
 
-export { createImage };
+function createElement(type, className, container) {
+	const element = document.createElement(type);
+	element.className = className;
+
+	container.appendChild(element);
+}
+
+export { createImage, createElement };

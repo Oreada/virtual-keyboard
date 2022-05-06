@@ -73,7 +73,7 @@ img {
 }
 
 ._container {
-	max-width: 1140px;
+	max-width: 784px;
 	padding: 0px 15px; //! secure
 	margin: 0px auto;
 	box-sizing: content-box;
@@ -101,21 +101,126 @@ input[type="search"]::-webkit-search-cancel-button {
 //================================================================================================
 
 // Подключение header
-@import "_header";
+// @import "_header";
 
-//================================================================================================
+//======== header ===========================================================================
 
-// ОСНОВНОЙ БЛОК: CONTENT
+.header {
+	padding-top: 20px;
+}
 
-//================================================================================================
+.header__container {
+}
 
-//========  ===============================================================================
+.header__title {
+	font-size: 20px;
+	text-align: center;
+}
 
-//========  =============================================================================
+//======== main ===============================================================================
 
-//========  ================================================================================
+.main {
+	padding-top: 40px;
+}
+
+.main__container {
+}
+
+.main__textarea {
+	height: 200px;
+	width: 784px;
+	border: 2px solid #545454;
+
+	margin-bottom: 40px;
+}
+
+.main__keyboard {
+	padding: 20px;
+}
+
+.keyboard {
+	// background-color: rgb(195, 219, 203);
+	border: 2px solid #545454;
+	border-radius: 5px;
+}
+
+.keyboard__list {
+	display: grid;
+	gap: 10px;
+	grid-template-rows: repeat(5, 40px);
+	grid-template-columns: repeat(15, 40px);
+}
+
+.keyboard__item {
+}
+
+.key {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	border: 1px solid #545454;
+	border-radius: 5px;
+
+	cursor: pointer;
+	user-select: none;
+}
+
+.key_twins {
+	position: relative;
+
+	& span {
+		position: absolute;
+		top: 2px;
+		right: 2px;
+
+		font-weight: 300;
+	}
+}
+
+.key_wide {
+	grid-column-start: span 2;
+}
+
+.key_widest {
+	grid-column-start: span 7;
+}
+
+.key_light {
+	background-color: rgb(187, 234, 165);
+	color: rgb(39, 79, 25);
+	font-weight: 600;
+}
+
+.key_dark {
+	background-color: rgb(39, 79, 25);
+	color: rgb(187, 234, 165);
+}
+
+//======== footer ================================================================================
+
+.footer {
+	padding-top: 40px;
+}
+
+.footer__container {
+}
+
+.footer__info {
+}
+
+.info {
+	font-size: 20px;
+	text-align: center;
+}
+
+.info__os {
+}
+
+.info__switch {
+}
 
 //================================================================================================
 
 // Подключение footer
-@import "_footer";
+// @import "_footer";
