@@ -109,7 +109,7 @@ const keysAll = [
   { content: 'Ctrl', code: 'ControlLeft', className: 'key_dark' },
   { content: 'Win', code: 'MetaLeft', className: 'key_dark' },
   { content: 'Alt', code: 'AltLeft', className: 'key_dark' },
-  { content: 'space', code: 'Space', className: 'key_light key_widest' },
+  { content: ' ', code: 'Space', className: 'key_light key_widest' },
   { content: 'Alt', code: 'AltRight', className: 'key_dark' },
   { content: 'Ctrl', code: 'ControlRight', className: 'key_dark' },
   { content: '&larr;', code: 'ArrowLeft', className: 'key_dark' },
@@ -118,10 +118,60 @@ const keysAll = [
 ];
 
 keysAll.forEach((keyObj) => {
+  const temp = keyObj;
   const className = `key ${keyObj.className}`;
-  let button = createElement('li', className, keyObj.content, keyboardList);
+  const button = createElement('li', className, keyObj.content, keyboardList);
+  temp.element = button;
 
   if (button.classList.contains('key_twin')) {
-    let contentTwin = createElement('span', 'key__addition', keyObj.contentTwin, button);
+    createElement('span', 'key__addition', keyObj.contentTwin, button);
   }
 });
+
+// ========================================================================================
+
+// const keysAllElements = document.querySelectorAll('.key');
+const textarea = document.querySelector('.main__textarea');
+
+function getKeyByCode(code) {
+  let found;
+  keysAll.forEach((obj) => {
+    if (obj.code === code) {
+      found = obj;
+    }
+  });
+  return found;
+}
+
+function getElemenByCode(code) {
+  return getKeyByCode(code).element;
+}
+
+function lightKey(event) {
+  const element = getElemenByCode(event.code);
+  if (element) {
+    element.classList.add('_light');
+  }
+}
+
+function addValueTextarea(elem, content) {
+  const temp = elem;
+  temp.value += content;
+}
+
+function unlightKey(event) {
+  const element = getElemenByCode(event.code);
+  if (element) {
+    element.classList.remove('_light');
+  }
+}
+
+function print(event) {
+  const key = getKeyByCode(event.code);
+
+  addValueTextarea(textarea, key.content);
+}
+
+document.addEventListener('keydown', lightKey);
+document.addEventListener('keyup', unlightKey);
+document.addEventListener('keydown', print);
