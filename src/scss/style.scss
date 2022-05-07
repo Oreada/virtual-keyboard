@@ -151,8 +151,8 @@ input[type="search"]::-webkit-search-cancel-button {
 	grid-template-columns: repeat(15, 40px);
 }
 
-.keyboard__item {
-}
+// .keyboard__item {
+// }
 
 .key {
 	display: flex;
@@ -166,16 +166,16 @@ input[type="search"]::-webkit-search-cancel-button {
 	user-select: none;
 }
 
-.key_twins {
+.key_twin {
 	position: relative;
+}
 
-	& span {
-		position: absolute;
-		top: 2px;
-		right: 2px;
+.key__addition {
+	position: absolute;
+	top: 2px;
+	right: 2px;
 
-		font-weight: 300;
-	}
+	font-weight: 300;
 }
 
 .key_wide {
@@ -190,11 +190,23 @@ input[type="search"]::-webkit-search-cancel-button {
 	background-color: rgb(187, 234, 165);
 	color: rgb(39, 79, 25);
 	font-weight: 600;
+
+	transition: all 0.3s ease 0s;
+
+	&:hover {
+		background-color: rgb(135, 154, 28);
+	}
 }
 
 .key_dark {
 	background-color: rgb(39, 79, 25);
 	color: rgb(187, 234, 165);
+
+	transition: all 0.3s ease 0s;
+
+	&:hover {
+		background-color: rgb(135, 154, 28);
+	}
 }
 
 //======== footer ================================================================================
