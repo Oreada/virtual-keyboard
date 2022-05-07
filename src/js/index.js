@@ -63,10 +63,7 @@ const keysAll = [
   {
     content: ']', code: 'BracketRight', className: 'key_light key_twin', contentTwin: '}',
   },
-  {
-    content: '\\', code: 'IntlBackslash', className: 'key_light key_twin', contentTwin: '|',
-  },
-  { content: 'DEL', code: 'Delete', className: 'key_dark' },
+  { content: 'DEL', code: 'Delete', className: 'key_dark key_wide' },
   { content: 'CapsLock', code: 'CapsLock', className: 'key_dark key_wide' },
   { content: 'a', code: 'KeyA', className: 'key_light' },
   { content: 's', code: 'KeyS', className: 'key_light' },
