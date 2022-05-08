@@ -180,10 +180,26 @@ keysAll.forEach((keyObj) => {
 // ========================================================================================
 
 const textarea = document.querySelector('.main__textarea');
+// const keysAllElements = document.querySelectorAll('.key');
 
 function addValueTextarea(elem, content) {
   const temp = elem;
   temp.value += content;
+}
+
+function getCursorPosTextarea(input) {
+  return {
+    start: input.selectionStart,
+    end: input.selectionEnd,
+  };
+}
+
+function setCursorPosTextarea(input, start) {
+  const temp = input;
+  setTimeout(() => {
+    temp.selectionStart = start;
+    temp.selectionEnd = start;
+  }, 1);
 }
 
 function getKeyByCode(code) {
@@ -196,60 +212,134 @@ function getKeyByCode(code) {
   return found;
 }
 
-function getElemenByCode(code) {
+function getElementByCode(code) {
   return getKeyByCode(code)?.element;
 }
 
 function lightKey(event) {
-  const element = getElemenByCode(event.code);
+  const element = getElementByCode(event.code);
   if (element) {
     element.classList.add('_light');
   }
 }
 
 function unlightKey(event) {
-  const element = getElemenByCode(event.code);
+  const element = getElementByCode(event.code);
   if (element) {
     element.classList.remove('_light');
   }
 }
 
-let flagCapsLock = false;
-
-function print(event) {
-  const key = getKeyByCode(event.code);
-
-  if (key) {
-    if (event.code === 'Tab') {
-      addValueTextarea(textarea, '    ');
-    } else if (event.code === 'CapsLock') {
-      flagCapsLock = !flagCapsLock;
-      if (flagCapsLock) {
-        getElemenByCode(event.code).classList.add('_light_caps');
-      } else {
-        getElemenByCode(event.code).classList.remove('_light_caps');
-      }
-    } else if (event.code === 'CapsLock'
-      || event.code === 'ControlLeft'
-      || event.code === 'MetaLeft'
-      || event.code === 'AltLeft'
-      || event.code === 'AltRight'
-      || event.code === 'ControlRight') {
-      addValueTextarea(textarea, '');
-    } else if (event.shiftKey) {
-      if (event.code === 'Space') {
-        addValueTextarea(textarea, key.content);
-      } else {
-        addValueTextarea(textarea, key.contentShift || '');
-      }
-    } else if (event.code.startsWith('Key') && flagCapsLock) {
-      addValueTextarea(textarea, key.contentShift);
+function removeContentTextarea(usedKey) {
+  const startCursor = getCursorPosTextarea(textarea).start;
+  const endCursor = getCursorPosTextarea(textarea).end;
+  let amounToDelete = endCursor - startCursor;
+  if (usedKey === 'Backspace') {
+    if (startCursor === endCursor) {
+      amounToDelete = 1;
+      const arr = textarea.value.split('');
+      arr.splice(startCursor - 1, `${amounToDelete}`);
+      textarea.value = arr.join('');
+      setCursorPosTextarea(textarea, startCursor - 1);
     } else {
-      addValueTextarea(textarea, key.content);
+      const arr = textarea.value.split('');
+      arr.splice(startCursor, `${amounToDelete}`);
+      textarea.value = arr.join('');
+      setCursorPosTextarea(textarea, startCursor);
+    }
+  } else if (usedKey === 'Delete') {
+    if (startCursor === endCursor) {
+      amounToDelete = 1;
+      const arr = textarea.value.split('');
+      arr.splice(startCursor, `${amounToDelete}`);
+      textarea.value = arr.join('');
+      setCursorPosTextarea(textarea, startCursor);
+    } else {
+      const arr = textarea.value.split('');
+      arr.splice(startCursor, `${amounToDelete}`);
+      textarea.value = arr.join('');
+      setCursorPosTextarea(textarea, startCursor);
     }
   }
+}
 
-  console.log(textarea.cols, textarea.rows);
+let flagCapsLock = false;
+
+function actionKey(event, obj) {
+  console.log(obj);
+  // addValueTextarea(textarea, obj.content);
+  if (obj) {
+    if (obj.code === 'Backspace' || obj.code === 'Delete') {
+      removeContentTextarea(obj.code);
+    } else if (obj.code === 'Tab') {
+      addValueTextarea(textarea, '\t');
+    } else if (obj.code === 'Enter') {
+      addValueTextarea(textarea, '\n');
+    } else if (obj.code === 'CapsLock') {
+      flagCapsLock = !flagCapsLock;
+      if (flagCapsLock) {
+        obj.element.classList.add('_light_capslock');
+      } else {
+        obj.element.classList.remove('_light_capslock');
+      }
+    } else if (obj.code === 'CapsLock'
+      || obj.code === 'ControlLeft'
+      || obj.code === 'MetaLeft'
+      || obj.code === 'AltLeft'
+      || obj.code === 'AltRight'
+      || obj.code === 'ControlRight') {
+      addValueTextarea(textarea, '');
+    } else if (event.shiftKey) {
+      if (obj.code === 'Space') {
+        addValueTextarea(textarea, obj.content);
+      } else {
+        addValueTextarea(textarea, obj.contentShift || '');
+      }
+    } else if (obj.code.startsWith('Key') && flagCapsLock) {
+      addValueTextarea(textarea, obj.contentShift);
+    } else {
+      addValueTextarea(textarea, obj.content);
+    }
+  }
+}
+
+function pressKey(event) {
+  const key = getKeyByCode(event.code);
+  actionKey(event, key);
+
+  // if (key) {
+  //   if (event.code === 'Backspace' || event.code === 'Delete') {
+  //     removeContentTextarea(event.code);
+  //   } else if (event.code === 'Tab') {
+  //     addValueTextarea(textarea, '\t');
+  //   } else if (event.code === 'Enter') {
+  //     addValueTextarea(textarea, '\n');
+  //   } else if (event.code === 'CapsLock') {
+  //     flagCapsLock = !flagCapsLock;
+  //     if (flagCapsLock) {
+  //       getElementByCode(event.code).classList.add('_light_capslock');
+  //     } else {
+  //       getElementByCode(event.code).classList.remove('_light_capslock');
+  //     }
+  //   } else if (event.code === 'CapsLock'
+  //     || event.code === 'ControlLeft'
+  //     || event.code === 'MetaLeft'
+  //     || event.code === 'AltLeft'
+  //     || event.code === 'AltRight'
+  //     || event.code === 'ControlRight') {
+  //     addValueTextarea(textarea, '');
+  //   } else if (event.shiftKey) {
+  //     if (event.code === 'Space') {
+  //       addValueTextarea(textarea, key.content);
+  //     } else {
+  //       addValueTextarea(textarea, key.contentShift || '');
+  //     }
+  //   } else if (event.code.startsWith('Key') && flagCapsLock) {
+  //     addValueTextarea(textarea, key.contentShift);
+  //   } else {
+  //     addValueTextarea(textarea, key.content);
+  //   }
+  // }
 }
 
 function stopPrint(event) {
@@ -259,4 +349,10 @@ function stopPrint(event) {
 document.addEventListener('keydown', lightKey);
 document.addEventListener('keyup', unlightKey);
 textarea.addEventListener('keydown', stopPrint);
-document.addEventListener('keydown', print);
+document.addEventListener('keydown', pressKey);
+keysAll.forEach((keyObj) => {
+  keyObj.element.addEventListener('click', (event) => {
+    actionKey(event, keyObj);
+    textarea.focus();
+  });
+});
