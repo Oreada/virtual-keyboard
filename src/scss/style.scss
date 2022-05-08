@@ -165,7 +165,7 @@ input[type="search"]::-webkit-search-cancel-button {
 	cursor: pointer;
 	user-select: none;
 
-	box-shadow: 0 0 2px #000; /*! исходное состояние - нет цвета */
+	box-shadow: 0 0 2px #545454;
 	transition: all 2s ease;
 }
 
@@ -213,11 +213,12 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 ._light {
-	// background-color: rgb(222, 222, 127);
-	/*! чтобы цвет заливался сразу и на него не действовал "transition: all 2s ease;" из ".square" */
-	// transition-duration: 0s;
-	/*! после добавления этого свойства заливка происходит сразу, а удаление цвета уже плавно */
+	box-shadow: 0 0 2px rgb(135, 154, 28), 0 0 10px rgb(135, 154, 28);
+	background-color: rgb(135, 154, 28);
+	border: 1px solid rgb(135, 154, 28);
+}
 
+._light_caps {
 	box-shadow: 0 0 2px rgb(135, 154, 28), 0 0 10px rgb(135, 154, 28);
 	background-color: rgb(135, 154, 28);
 	border: 1px solid rgb(135, 154, 28);
