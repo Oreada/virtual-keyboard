@@ -297,6 +297,7 @@ function actionKey(objArg, source) {
   const obj = objArg;
   if (obj) {
     if (obj.code === 'LanguageSwitch') {
+      flagCapsLock = false;
       obj.lang = !obj.lang;
       if (obj.lang) {
         createKeyboard('рус');
@@ -336,8 +337,27 @@ function actionKey(objArg, source) {
       || obj.code === 'AltRight'
       || obj.code === 'ControlRight') {
       addValueTextarea(textarea, '');
-    } else if (obj.code.startsWith('Key') && flagCapsLock) {
-      addValueTextarea(textarea, obj.contentShift);
+    } else if (flagCapsLock) {
+      if ((!getKeyByCode('LanguageSwitch').lang)) {
+        if (obj.code.startsWith('Key')) {
+          addValueTextarea(textarea, obj.contentShift);
+        } else {
+          addValueTextarea(textarea, obj.content);
+        }
+      } else if ((getKeyByCode('LanguageSwitch').lang)) {
+        if ((obj.code.startsWith('Key')
+          || obj.code === 'Backquote'
+          || obj.code === 'BracketLeft'
+          || obj.code === 'BracketRight'
+          || obj.code === 'Semicolon'
+          || obj.code === 'Quote'
+          || obj.code === 'Comma'
+          || obj.code === 'Period')) {
+          addValueTextarea(textarea, obj.contentShiftRu);
+        } else {
+          addValueTextarea(textarea, obj.contentRu);
+        }
+      }
     } else if (obj.code === 'ShiftLeft') {
       if (source === 'mouse') {
         obj.state = !obj.state;
