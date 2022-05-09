@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const conf = {
   entry: './src/js/index.js',
@@ -25,6 +26,15 @@ const conf = {
       title: 'Virtual keyboard',
       filename: 'index.html',
       template: 'src/index.html',
+      favicon: 'public/favicon.ico',
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: 'public',
+          noErrorOnMissing: true,
+        },
+      ],
     }),
   ],
 

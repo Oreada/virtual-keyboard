@@ -31,7 +31,7 @@ const mainContent = `
   <div class="footer__container _container">
     <div class="footer__info info">
       <p class="info__os">OS Windows</p>
-      <p class="info__switch">Switch language: Ctrl + Alt (left)</p>
+      <p class="info__switch">Switch language: Ctrl + Alt (left) or "eng/рус" button</p>
     </div>
   </div>
 </footer>
