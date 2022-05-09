@@ -389,6 +389,9 @@ function actionKey(objArg, source) {
           keyObj.element.addEventListener('mouseup', () => {
             unlightKey(keyObj.code);
           });
+          keyObj.element.addEventListener('mouseleave', () => {
+            unlightKey(keyObj.code);
+          });
         });
       }
       if (!obj.lang) {
@@ -401,6 +404,9 @@ function actionKey(objArg, source) {
             lightKey(keyObj.code);
           });
           keyObj.element.addEventListener('mouseup', () => {
+            unlightKey(keyObj.code);
+          });
+          keyObj.element.addEventListener('mouseleave', () => {
             unlightKey(keyObj.code);
           });
         });
@@ -537,6 +543,9 @@ keysAll.forEach((keyObj) => {
     lightKey(keyObj.code);
   });
   keyObj.element.addEventListener('mouseup', () => {
+    unlightKey(keyObj.code);
+  });
+  keyObj.element.addEventListener('mouseleave', () => {
     unlightKey(keyObj.code);
   });
 });
