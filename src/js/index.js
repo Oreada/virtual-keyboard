@@ -203,11 +203,6 @@ const keysAll = [
 const textarea = document.querySelector('.main__textarea');
 let flagCapsLock = false;
 
-function addValueTextarea(elem, content) {
-  const temp = elem;
-  temp.value += content;
-}
-
 function getCursorPosTextarea(input) {
   return {
     start: input.selectionStart,
@@ -221,6 +216,50 @@ function setCursorPosTextarea(input, start) {
     temp.selectionStart = start;
     temp.selectionEnd = start;
   }, 1);
+}
+
+function removeContentTextarea(usedKey) {
+  const startCursor = getCursorPosTextarea(textarea).start;
+  const endCursor = getCursorPosTextarea(textarea).end;
+  let amounToDelete = endCursor - startCursor;
+  if (usedKey === 'Backspace') {
+    if (startCursor === endCursor) {
+      amounToDelete = 1;
+      const arr = textarea.value.split('');
+      arr.splice(startCursor - 1, `${amounToDelete}`);
+      textarea.value = arr.join('');
+      setCursorPosTextarea(textarea, startCursor - 1);
+    } else {
+      const arr = textarea.value.split('');
+      arr.splice(startCursor, `${amounToDelete}`);
+      textarea.value = arr.join('');
+      setCursorPosTextarea(textarea, startCursor);
+    }
+  } else if (usedKey === 'Delete') {
+    if (startCursor === endCursor) {
+      amounToDelete = 1;
+      const arr = textarea.value.split('');
+      arr.splice(startCursor, `${amounToDelete}`);
+      textarea.value = arr.join('');
+      setCursorPosTextarea(textarea, startCursor);
+    } else {
+      const arr = textarea.value.split('');
+      arr.splice(startCursor, `${amounToDelete}`);
+      textarea.value = arr.join('');
+      setCursorPosTextarea(textarea, startCursor);
+    }
+  }
+}
+
+function addValueTextarea(elem, content) {
+  const positionCursorObj = getCursorPosTextarea(textarea);
+  const temp = elem;
+
+  const val = temp.value;
+  temp.value = val.slice(0, positionCursorObj.start) + content + val.slice(positionCursorObj.end);
+  temp.selectionStart = positionCursorObj.end + content.length
+    - (positionCursorObj.end - positionCursorObj.start);
+  temp.selectionEnd = temp.selectionStart;
 }
 
 function getKeyByCode(code) {
@@ -255,7 +294,7 @@ function lightKeyEvent(event) {
 function unlightKey(code) {
   const element = getElementByCode(code);
   if (element) {
-    element.classList.remove('_light');
+    setTimeout(() => element.classList.remove('_light'), 150);
   }
 }
 
@@ -265,39 +304,6 @@ function unlightKeyEvent(event) {
     curCode = 'ShiftLeft';
   }
   unlightKey(curCode);
-}
-
-function removeContentTextarea(usedKey) {
-  const startCursor = getCursorPosTextarea(textarea).start;
-  const endCursor = getCursorPosTextarea(textarea).end;
-  let amounToDelete = endCursor - startCursor;
-  if (usedKey === 'Backspace') {
-    if (startCursor === endCursor) {
-      amounToDelete = 1;
-      const arr = textarea.value.split('');
-      arr.splice(startCursor - 1, `${amounToDelete}`);
-      textarea.value = arr.join('');
-      setCursorPosTextarea(textarea, startCursor - 1);
-    } else {
-      const arr = textarea.value.split('');
-      arr.splice(startCursor, `${amounToDelete}`);
-      textarea.value = arr.join('');
-      setCursorPosTextarea(textarea, startCursor);
-    }
-  } else if (usedKey === 'Delete') {
-    if (startCursor === endCursor) {
-      amounToDelete = 1;
-      const arr = textarea.value.split('');
-      arr.splice(startCursor, `${amounToDelete}`);
-      textarea.value = arr.join('');
-      setCursorPosTextarea(textarea, startCursor);
-    } else {
-      const arr = textarea.value.split('');
-      arr.splice(startCursor, `${amounToDelete}`);
-      textarea.value = arr.join('');
-      setCursorPosTextarea(textarea, startCursor);
-    }
-  }
 }
 
 function createKeyboard(language) {
@@ -338,6 +344,12 @@ function actionKey(objArg, source) {
             actionKey(keyObj, 'mouse');
             textarea.focus();
           });
+          keyObj.element.addEventListener('mousedown', () => {
+            lightKey(keyObj.code);
+          });
+          keyObj.element.addEventListener('mouseup', () => {
+            unlightKey(keyObj.code);
+          });
         });
       }
       if (!obj.lang) {
@@ -346,6 +358,12 @@ function actionKey(objArg, source) {
           keyObj.element.addEventListener('click', () => {
             actionKey(keyObj, 'mouse');
             textarea.focus();
+          });
+          keyObj.element.addEventListener('mousedown', () => {
+            lightKey(keyObj.code);
+          });
+          keyObj.element.addEventListener('mouseup', () => {
+            unlightKey(keyObj.code);
           });
         });
       }
@@ -442,10 +460,6 @@ function pressKey(event) {
   actionKey(key, 'keyboard');
 }
 
-function stopPrint(event) {
-  event.preventDefault();
-}
-
 function unpressKey(event) {
   let curCode = event.code;
   if (curCode === 'ShiftRight') {
@@ -460,12 +474,22 @@ function unpressKey(event) {
   }
 }
 
+function stopPrint(event) {
+  event.preventDefault();
+}
+
 createKeyboard('eng');
 
 keysAll.forEach((keyObj) => {
   keyObj.element.addEventListener('click', () => {
     actionKey(keyObj, 'mouse');
     textarea.focus();
+  });
+  keyObj.element.addEventListener('mousedown', () => {
+    lightKey(keyObj.code);
+  });
+  keyObj.element.addEventListener('mouseup', () => {
+    unlightKey(keyObj.code);
   });
 });
 
