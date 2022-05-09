@@ -118,6 +118,13 @@ function getElementByCode(code) {
 }
 
 function lightKey(code) {
+  const key = getKeyByCode(code);
+  if (key.element) {
+    key.element.classList.add('_light');
+  }
+}
+
+function lightKeyManual(code) {
   const element = getElementByCode(code);
   if (element) {
     element.classList.add('_light');
@@ -132,10 +139,16 @@ function lightKeyEvent(event) {
   lightKey(curCode);
 }
 
-function unlightKey(code) {
-  const element = getElementByCode(code);
-  if (element) {
-    setTimeout(() => element.classList.remove('_light'), 150);
+function unlightKey(code, event) {
+  const key = getKeyByCode(code);
+  if (key.element && (key.code !== 'ShiftLeft' || event)) {
+    setTimeout(() => key.element.classList.remove('_light'), 150);
+  }
+}
+function unlightKeyManual(code) {
+  const key = getKeyByCode(code);
+  if (key.element) {
+    setTimeout(() => key.element.classList.remove('_light'), 150);
   }
 }
 
@@ -144,7 +157,7 @@ function unlightKeyEvent(event) {
   if (curCode === 'ShiftRight') {
     curCode = 'ShiftLeft';
   }
-  unlightKey(curCode);
+  unlightKey(curCode, event);
 }
 
 function createKeyboard(language) {
@@ -267,9 +280,9 @@ function actionKey(objArg, source) {
       if (source === 'mouse') {
         obj.state = !obj.state;
         if (obj.state) {
-          lightKey(obj.code);
+          lightKeyManual(obj.code);
         } else {
-          unlightKey(obj.code);
+          unlightKeyManual(obj.code);
         }
       } else if (source === 'keyboard') {
         obj.state = true;
@@ -283,7 +296,7 @@ function actionKey(objArg, source) {
           curContent = obj.contentShift || obj.content;
           if (source === 'mouse') {
             shift.state = false;
-            unlightKey(shift.code);
+            unlightKeyManual(shift.code);
           }
         }
         addValueTextarea(textarea, curContent);
@@ -293,7 +306,7 @@ function actionKey(objArg, source) {
           curContent = obj.contentShiftRu || obj.contentRu;
           if (source === 'mouse') {
             shift.state = false;
-            unlightKey(shift.code);
+            unlightKeyManual(shift.code);
           }
         }
         addValueTextarea(textarea, curContent);
