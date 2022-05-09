@@ -4,6 +4,39 @@ import { createElement } from './createElement';
 
 import { setLocalStorage, getLocalStorage } from './localStorage';
 
+const mainContent = `
+<header class="header">
+  <div class="header__container _container">
+    <h1 class="header__title">RSS Virtual Keyboard</h1>
+  </div>
+</header>
+
+<main class="main">
+  <div class="main__container _container">
+
+    <textarea class="main__textarea" name="textarea"></textarea>
+
+    <div class="main__keyboard keyboard">
+      <ul class="keyboard__list">
+        
+      </ul>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="footer__container _container">
+    <div class="footer__info info">
+      <p class="info__os">OS Windows</p>
+      <p class="info__switch">Switch language: Ctrl + Alt (left)</p>
+    </div>
+  </div>
+</footer>
+`;
+
+createElement('div', 'wrapper', mainContent, document.body);
+
 const keyboardList = document.querySelector('.keyboard__list');
 
 const keysAll = [
