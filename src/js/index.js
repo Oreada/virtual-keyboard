@@ -3,6 +3,8 @@ import '../scss/style.scss';
 
 import { createElement } from './createElement';
 
+import { setLocalStorage, getLocalStorage } from './localStorage';
+
 const keyboardList = document.querySelector('.keyboard__list');
 
 const keysAll = [
@@ -166,7 +168,7 @@ const keysAll = [
     content: '/', code: 'Slash', className: 'key_light key_twin', contentShift: '?', classNameRu: 'key_light key_twin', contentRu: '.', contentShiftRu: ',',
   },
   {
-    content: '&uarr;', code: 'ArrowUp', className: 'key_dark', classNameRu: 'key_dark',
+    content: '↑', code: 'ArrowUp', className: 'key_dark', classNameRu: 'key_dark', contentRu: '↑',
   },
   {
     content: 'eng', code: 'LanguageSwitch', className: 'key_dark', lang: false, classNameRu: 'key_dark', contentRu: 'рус',
@@ -190,13 +192,13 @@ const keysAll = [
     content: 'Ctrl', code: 'ControlRight', className: 'key_dark', classNameRu: 'key_dark',
   },
   {
-    content: '&larr;', code: 'ArrowLeft', className: 'key_dark', classNameRu: 'key_dark',
+    content: '←', code: 'ArrowLeft', className: 'key_dark', classNameRu: 'key_dark', contentRu: '←',
   },
   {
-    content: '&darr;', code: 'ArrowDown', className: 'key_dark', classNameRu: 'key_dark',
+    content: '↓', code: 'ArrowDown', className: 'key_dark', classNameRu: 'key_dark', contentRu: '↓',
   },
   {
-    content: '&rarr;', code: 'ArrowRight', className: 'key_dark', classNameRu: 'key_dark',
+    content: '→', code: 'ArrowRight', className: 'key_dark', classNameRu: 'key_dark', contentRu: '→',
   },
 ];
 
@@ -307,11 +309,17 @@ function unlightKeyEvent(event) {
 }
 
 function createKeyboard(language) {
+  setLocalStorage('lang', language);
+
   keyboardList.innerHTML = '';
   keysAll.forEach((keyObj) => {
     const temp = keyObj;
     const className = `key ${keyObj.className}`;
     const classNameRu = `key ${keyObj.classNameRu}`;
+
+    if (temp.code === 'LanguageSwitch') {
+      temp.lang = language !== 'eng';
+    }
 
     if (language === 'eng') {
       const button = createElement('li', className, keyObj.content, keyboardList);
@@ -342,7 +350,6 @@ function actionKey(objArg, source) {
         keysAll.forEach((keyObj) => {
           keyObj.element.addEventListener('click', () => {
             actionKey(keyObj, 'mouse');
-            textarea.focus();
           });
           keyObj.element.addEventListener('mousedown', () => {
             lightKey(keyObj.code);
@@ -357,7 +364,6 @@ function actionKey(objArg, source) {
         keysAll.forEach((keyObj) => {
           keyObj.element.addEventListener('click', () => {
             actionKey(keyObj, 'mouse');
-            textarea.focus();
           });
           keyObj.element.addEventListener('mousedown', () => {
             lightKey(keyObj.code);
@@ -448,6 +454,7 @@ function actionKey(objArg, source) {
         addValueTextarea(textarea, curContent);
       }
     }
+    textarea.focus();
   }
 }
 
@@ -456,8 +463,18 @@ function pressKey(event) {
   if (curCode === 'ShiftRight') {
     curCode = 'ShiftLeft';
   }
-  const key = getKeyByCode(curCode);
-  actionKey(key, 'keyboard');
+  if (event.altKey && (event.ctrlKey || event.metaKey) && ['AltLeft', 'ControlLeft'].indexOf(event.code) !== -1) {
+    if (!event.repeat) {
+      curCode = 'LanguageSwitch';
+      const key = getKeyByCode(curCode);
+      setTimeout(() => {
+        actionKey(key, 'keyboard');
+      }, 200);
+    }
+  } else {
+    const key = getKeyByCode(curCode);
+    actionKey(key, 'keyboard');
+  }
 }
 
 function unpressKey(event) {
@@ -478,12 +495,11 @@ function stopPrint(event) {
   event.preventDefault();
 }
 
-createKeyboard('eng');
+createKeyboard(getLocalStorage('lang', 'eng'));
 
 keysAll.forEach((keyObj) => {
   keyObj.element.addEventListener('click', () => {
     actionKey(keyObj, 'mouse');
-    textarea.focus();
   });
   keyObj.element.addEventListener('mousedown', () => {
     lightKey(keyObj.code);
@@ -500,3 +516,5 @@ document.addEventListener('keyup', unlightKeyEvent);
 textarea.addEventListener('keydown', stopPrint);
 document.addEventListener('keydown', pressKey);
 document.addEventListener('keyup', unpressKey);
+
+// ========================================================================================
