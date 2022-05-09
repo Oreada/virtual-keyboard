@@ -119,7 +119,7 @@ function getElementByCode(code) {
 
 function lightKey(code) {
   const key = getKeyByCode(code);
-  if (key.element) {
+  if (key && key.element) {
     key.element.classList.add('_light');
   }
 }
@@ -141,13 +141,13 @@ function lightKeyEvent(event) {
 
 function unlightKey(code, event) {
   const key = getKeyByCode(code);
-  if (key.element && (key.code !== 'ShiftLeft' || event)) {
+  if (key && key.element && (key.code !== 'ShiftLeft' || event)) {
     setTimeout(() => key.element.classList.remove('_light'), 150);
   }
 }
 function unlightKeyManual(code) {
   const key = getKeyByCode(code);
-  if (key.element) {
+  if (key && key.element) {
     setTimeout(() => key.element.classList.remove('_light'), 150);
   }
 }
